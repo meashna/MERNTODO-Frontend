@@ -1,0 +1,32 @@
+.task-cont {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    border: solid 0.5px rgb(97, 97, 97);
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 3rem;
+    background-color: white;
+    box-shadow: 0px 3.291px 8.228px 0px rgba(0, 0, 0, 0.12);
+}
+
+.task-icons {
+    display: flex;
+}
+
+.icons {
+    margin: 0 5px;
+    color: black;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.task-cont input {
+    font-family: Lato;
+    border: none;
+    outline: 0.1rem solid rgb(143, 143, 143);
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
