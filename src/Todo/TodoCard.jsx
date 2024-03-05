@@ -20,7 +20,7 @@ const TodoCard = ({ title, id, delid, update }) => {
       return;
     }
     try {
-      await axios.put(`${url}/api/v2/updateTask/${id}`, {
+      await axios.put(`${url}api/v2/updateTask/${id}`, {
         title: editTitle,
       });
       update(id, editTitle);

@@ -24,7 +24,7 @@ const SignUp = () => {
     e.preventDefault();
 
     await axios
-      .post(`${url}/api/v1/register`, Inputs)
+      .post(`${url}api/v1/register`, Inputs)
       .then((response) => {
         if (response.data.message === "User added") {
           alert(response.data.message);

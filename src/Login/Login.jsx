@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     console.log(Inputs);
     await axios
-      .post(`${url}/api/v1/signin`, Inputs)
+      .post(`${url}api/v1/signin`, Inputs)
       .then((response) => {
         console.log(response.data._id);
         //console.log(response.data.message);

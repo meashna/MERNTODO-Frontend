@@ -21,7 +21,7 @@ const Todo = () => {
     }
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`${url}/api/v2/getTasks/${userId}`);
+        const response = await axios.get(`${url}api/v2/getTasks/${userId}`);
         // setTasks(response.data.list);
         setTasks(response.data.list || []);
       } catch (error) {
@@ -59,7 +59,7 @@ const Todo = () => {
 
   const handleDelete = async (taskId) => {
     try {
-      await axios.delete(`${url}/api/v2/deleteTask/${taskId}`, {
+      await axios.delete(`${url}api/v2/deleteTask/${taskId}`, {
         data: { id: userId },
       });
       setTasks(tasks.filter((task) => task._id !== taskId));
