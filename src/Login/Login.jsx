@@ -21,19 +21,27 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(Inputs);
+    if (!Inputs.email.trim() || !Inputs.password.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please fill out all fields.",
+        confirmButtonText: "OK",
+      });
+      return; // Stop the function from proceeding further
+    }
     await axios
       .post(`${url}api/v1/signin`, Inputs)
       .then((response) => {
         console.log(response.data._id);
         //console.log(response.data.message);
         sessionStorage.setItem("id", response.data._id);
-        console.log("this is the id");
         const username = response.data.username;
         localStorage.setItem("username", username);
-        navigate("/todo");
-        alert("Loggined Sucessfully.");
-
+        Swal.fire({
+          icon: "success",
+          title: "Loggined Sucessfully.",
+          confirmButtonText: "OK",
+        });
         navigate("/todo");
       })
       .catch((error) => {
@@ -41,10 +49,17 @@ const Login = () => {
           error.response &&
           error.response.data.message === "User not found."
         ) {
-          alert("User not found. Please check your email address.");
+          Swal.fire({
+            icon: "error",
+            title: "User not found. Please check your email address.",
+            confirmButtonText: "Try Again",
+          });
         } else {
-          // General error handling
-          alert("Incorrect password. Please try again.");
+          Swal.fire({
+            icon: "error",
+            title: "User not found. Please check your email address.",
+            confirmButtonText: "Try Again",
+          });
         }
       });
   };
@@ -54,7 +69,6 @@ const Login = () => {
         <form className="form" onSubmit={handleSubmit}>
           <h2 className="login-heading">Login</h2>
           <div className="form-control">
-            {/* <label>Email:</label> */}
             <input
               type="email"
               name="email"
@@ -67,7 +81,6 @@ const Login = () => {
             </div>
           </div>
           <div className="form-control">
-            {/* <label>Password:</label> */}
             <input
               type="password"
               name="password"

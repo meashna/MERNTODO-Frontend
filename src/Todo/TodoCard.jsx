@@ -16,7 +16,7 @@ const TodoCard = ({ title, id, delid, update }) => {
 
   const handleUpdate = async () => {
     if (editTitle.trim() === "") {
-      toast.error("Task title cannot be empty");
+      toast.error("Task cannot be empty");
       return;
     }
     try {

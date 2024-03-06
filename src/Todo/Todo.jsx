@@ -40,7 +40,7 @@ const Todo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (taskInput.title.trim() === "") {
-      toast.error("Enter Task");
+      toast.error("Task cannot be empty");
       return;
     }
     try {
@@ -79,6 +79,11 @@ const Todo = () => {
 
   // Logout function
   const handleLogout = () => {
+    Swal.fire({
+      icon: "success",
+      title: "Logout Successfull",
+      confirmButtonText: "OK",
+    });
     navigate("/login");
   };
 

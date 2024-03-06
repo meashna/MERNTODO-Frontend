@@ -22,15 +22,27 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!Inputs.email.trim() || !Inputs.password.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please fill out all fields.",
+        confirmButtonText: "Try Again",
+      });
+      return; // Stop the function from proceeding further
+    }
     await axios
       .post(`${url}api/v1/register`, Inputs)
       .then((response) => {
         if (response.data.message === "User added") {
-          alert(response.data.message);
+          // alert(response.data.message);
           console.log(response.data._id);
           sessionStorage.setItem("id", response.data._id);
           localStorage.setItem("username", Inputs.username);
+          Swal.fire({
+            icon: "success",
+            title: "Registered Sucessfully.",
+            confirmButtonText: "OK",
+          });
           navigate("/todo");
         }
         setInputs({
@@ -44,7 +56,12 @@ const SignUp = () => {
           error.response &&
           error.response.data.message === "User already exists"
         ) {
-          alert("user exists");
+          Swal.fire({
+            icon: "error",
+            title: "user already exists",
+            confirmButtonText: "Try Again",
+          });
+          // alert("user exists");
           navigate("/login");
         }
       });
