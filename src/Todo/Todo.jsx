@@ -44,7 +44,7 @@ const Todo = () => {
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/v2/addTask`, {
+      const response = await axios.post(`${url}api/v2/addTask`, {
         title: taskInput.title,
         id: userId,
       });
