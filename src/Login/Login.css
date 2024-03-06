@@ -89,3 +89,18 @@
 .login-link {
     text-decoration: none;
 }
+
+
+
+@media only screen and (max-width: 600px) {
+    .form {
+        width: 250px;
+        padding: 1rem;
+    }
+
+    .form-control {
+        margin: 1rem;
+        padding: 0.6rem;
+    }
+
+}
