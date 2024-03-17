@@ -7,7 +7,7 @@ import { IoPerson } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import url from "../url.js";
-
+import Swal from "sweetalert";
 const SignUp = () => {
   const [Inputs, setInputs] = useState({
     username: "",
@@ -23,10 +23,10 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!Inputs.email.trim() || !Inputs.password.trim()) {
-      Swal.fire({
+      Swal({
         icon: "warning",
         title: "Please fill out all fields.",
-        confirmButtonText: "Try Again",
+        button: "Try Again",
       });
       return; // Stop the function from proceeding further
     }
@@ -38,10 +38,10 @@ const SignUp = () => {
           console.log(response.data._id);
           sessionStorage.setItem("id", response.data._id);
           localStorage.setItem("username", Inputs.username);
-          Swal.fire({
+          Swal({
             icon: "success",
             title: "Registered Sucessfully.",
-            confirmButtonText: "OK",
+            button: "OK",
           });
           navigate("/todo");
         }
@@ -56,10 +56,10 @@ const SignUp = () => {
           error.response &&
           error.response.data.message === "User already exists"
         ) {
-          Swal.fire({
+          Swal({
             icon: "error",
             title: "user already exists",
-            confirmButtonText: "Try Again",
+            button: "Try Again",
           });
           // alert("user exists");
           navigate("/login");

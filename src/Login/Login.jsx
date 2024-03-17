@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import url from "../url.js";
+import Swal from "sweetalert";
 
 const Login = () => {
   const [Inputs, setInputs] = useState({
@@ -22,10 +23,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!Inputs.email.trim() || !Inputs.password.trim()) {
-      Swal.fire({
+      Swal({
         icon: "warning",
         title: "Please fill out all fields.",
-        confirmButtonText: "OK",
+        button: "OK",
       });
       return; // Stop the function from proceeding further
     }
@@ -37,10 +38,10 @@ const Login = () => {
         sessionStorage.setItem("id", response.data._id);
         const username = response.data.username;
         localStorage.setItem("username", username);
-        Swal.fire({
+        Swal({
           icon: "success",
           title: "Loggined Sucessfully.",
-          confirmButtonText: "OK",
+          button: "OK",
         });
         navigate("/todo");
       })
@@ -49,16 +50,16 @@ const Login = () => {
           error.response &&
           error.response.data.message === "User not found."
         ) {
-          Swal.fire({
+          Swal({
             icon: "error",
             title: "User not found. Please check your email address.",
-            confirmButtonText: "Try Again",
+            button: "Try Again",
           });
         } else {
-          Swal.fire({
+          Swal({
             icon: "error",
             title: "User not found. Please check your email address.",
-            confirmButtonText: "Try Again",
+            button: "Try Again",
           });
         }
       });

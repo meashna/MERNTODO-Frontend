@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { IoAdd } from "react-icons/io5";
 import url from "../url.js";
+import Swal from "sweetalert";
 
 const Todo = () => {
   const userId = sessionStorage.getItem("id");
@@ -79,10 +80,10 @@ const Todo = () => {
 
   // Logout function
   const handleLogout = () => {
-    Swal.fire({
+    Swal({
       icon: "success",
       title: "Logout Successfull",
-      confirmButtonText: "OK",
+      button: "OK",
     });
     navigate("/login");
   };
