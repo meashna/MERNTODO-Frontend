@@ -38,6 +38,7 @@ const SignUp = () => {
           console.log(response.data._id);
           sessionStorage.setItem("id", response.data._id);
           localStorage.setItem("username", Inputs.username);
+          localStorage.setItem("usermail", Inputs.email);
           Swal({
             icon: "success",
             title: "Registered Sucessfully.",

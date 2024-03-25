@@ -36,10 +36,13 @@ const Login = () => {
     await axios
       .post(`${url}api/v1/signin`, Inputs)
       .then((response) => {
+        navigate("/todo");
         sessionStorage.setItem("id", response.data._id);
         const username = response.data.username;
         localStorage.setItem("username", username);
-
+        const usermail = response.data.email;
+        localStorage.setItem("usermail", usermail);
+        console.log(Inputs);
         Swal({
           icon: "success",
           title: "Logged In Successfully.",
@@ -67,13 +70,14 @@ const Login = () => {
             title: "User not found. Please check your email address.",
             button: "Try Again",
           });
-        } else {
-          Swal({
-            icon: "error",
-            title: "User not found. Please check your email address.",
-            button: "Try Again",
-          });
         }
+        // else {
+        //   Swal({
+        //     icon: "error",
+        //     title: "User not found. Please check your email address.",
+        //     button: "Try Again",
+        //   });
+        // }
       });
   };
 

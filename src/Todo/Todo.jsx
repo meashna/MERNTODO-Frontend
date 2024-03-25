@@ -8,12 +8,14 @@ import axios from "axios";
 import { IoAdd } from "react-icons/io5";
 import url from "../url.js";
 import Swal from "sweetalert";
+import mixpanel from "../mixpanel.js";
 
 const Todo = () => {
   const userId = sessionStorage.getItem("id");
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState({ title: "" });
   const username = localStorage.getItem("username");
+  const usermail = localStorage.getItem("usermail");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +51,9 @@ const Todo = () => {
         title: taskInput.title,
         id: userId,
       });
+
+      EventTaskgenerated(usermail);
+
       setTasks([...tasks, response.data.list]);
       setTaskInput({ title: "" });
       toast.success("Task Added");
@@ -63,6 +68,7 @@ const Todo = () => {
       await axios.delete(`${url}api/v2/deleteTask/${taskId}`, {
         data: { id: userId },
       });
+      EventTaskdeleted(usermail);
       setTasks(tasks.filter((task) => task._id !== taskId));
       toast.success("Task Deleted");
     } catch (error) {
@@ -86,6 +92,24 @@ const Todo = () => {
       button: "OK",
     });
     navigate("/login");
+  };
+
+  const EventTaskgenerated = (usermail) => {
+    mixpanel.track("Task Generated", {
+      "User ID": usermail,
+      "Task ID": taskInput._id,
+      "Generated Task": taskInput.title,
+    });
+    console.log("Task generated event tracked successfully");
+  };
+
+  const EventTaskdeleted = (usermail) => {
+    mixpanel.track("Task Deleted", {
+      "User ID": usermail,
+      "Task ID": taskInput._id,
+      "Deleted Task": taskInput.title,
+    });
+    console.log("Task deleted event tracked successfully");
   };
 
   return (
