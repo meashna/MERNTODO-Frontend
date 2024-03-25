@@ -52,11 +52,10 @@ const Todo = () => {
         id: userId,
       });
 
-      EventTaskgenerated(usermail);
-
       setTasks([...tasks, response.data.list]);
       setTaskInput({ title: "" });
       toast.success("Task Added");
+      EventTaskgenerated(usermail);
     } catch (error) {
       console.error("Failed to add task:", error);
       toast.error("Failed to add task");

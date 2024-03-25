@@ -20,6 +20,12 @@
     color: black;
     font-size: 1rem;
     font-weight: 900;
+    cursor: pointer;
+}
+
+.icons:hover {
+    color: rgb(48, 48, 48);
+
 }
 
 .task-cont input {
