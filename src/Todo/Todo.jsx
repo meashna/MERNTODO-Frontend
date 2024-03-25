@@ -112,9 +112,7 @@ const Todo = () => {
               value={taskInput.title}
             />
             <button className="add" type="submit">
-              <div className="add-icon">
-                <IoAdd />
-              </div>
+              <IoAdd className="add-icon" />
             </button>
           </form>
         </div>

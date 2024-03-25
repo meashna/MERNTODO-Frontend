@@ -23,6 +23,15 @@ const TodoCard = ({ title, id, delid, update }) => {
       await axios.put(`${url}api/v2/updateTask/${id}`, {
         title: editTitle,
       });
+
+      // Update the task in the list
+      mixpanel.track("Task Edited", {
+        "User ID": email,
+        "Task ID": id,
+        "Old Title": title,
+        "New Title": editTitle,
+      });
+
       update(id, editTitle);
       setIsEditing(false);
       toast.success("Task Updated");
