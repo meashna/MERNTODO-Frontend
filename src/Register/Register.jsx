@@ -48,6 +48,17 @@ const SignUp = () => {
             button: "OK",
           });
           navigate("/todo");
+
+          mixpanel.identify(Inputs.email);
+
+          mixpanel.people.set({
+            $name: Inputs.username,
+            $email: Inputs.email,
+            $created: new Date().toISOString(),
+            $user_id: Inputs.email,
+            test: "Test",
+          });
+
           Registered(Inputs.email);
         }
         setInputs({
