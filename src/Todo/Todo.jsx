@@ -55,25 +55,62 @@ const Todo = () => {
       setTasks([...tasks, response.data.list]);
       setTaskInput({ title: "" });
       toast.success("Task Added");
-      EventTaskgenerated(usermail);
+      Taskcreated(usermail, taskInput.title);
     } catch (error) {
       console.error("Failed to add task:", error);
       toast.error("Failed to add task");
     }
   };
 
+  const Taskcreated = (usermail, task) => {
+    mixpanel.track("Task Generated", {
+      "User ID": usermail,
+      "Generated Task": task,
+    });
+    mixpanel.people.increment("Tasks Added", 1);
+    console.log("Task created event tracked successfully");
+  };
+
+  // const handleDelete = async (taskId) => {
+  //   try {
+  //     await axios.delete(`${url}api/v2/deleteTask/${taskId}`, {
+  //       data: { id: userId },
+  //     });
+  //     Taskdeleted(usermail, taskId);
+  //     setTasks(tasks.filter((task) => task._id !== taskId));
+  //     toast.success("Task Deleted");
+  //   } catch (error) {
+  //     console.error("Failed to delete task:", error);
+  //     toast.error("Failed to delete task");
+  //   }
+  // };
+
   const handleDelete = async (taskId) => {
-    try {
-      await axios.delete(`${url}api/v2/deleteTask/${taskId}`, {
-        data: { id: userId },
-      });
-      EventTaskdeleted(usermail);
-      setTasks(tasks.filter((task) => task._id !== taskId));
-      toast.success("Task Deleted");
-    } catch (error) {
-      console.error("Failed to delete task:", error);
-      toast.error("Failed to delete task");
+    const taskToDelete = tasks.find((task) => task._id === taskId);
+    if (taskToDelete) {
+      try {
+        await axios.delete(`${url}api/v2/deleteTask/${taskId}`, {
+          data: { id: userId },
+        });
+        Taskdeleted(usermail, taskToDelete.title);
+
+        setTasks(tasks.filter((task) => task._id !== taskId));
+        toast.success("Task Deleted");
+      } catch (error) {
+        console.error("Failed to delete task:", error);
+        toast.error("Failed to delete task");
+      }
+    } else {
+      console.error("Task to delete not found");
     }
+  };
+
+  const Taskdeleted = (usermail, taskTitle) => {
+    mixpanel.track("Task Deleted", {
+      "User ID": usermail,
+      "Deleted Task": taskTitle,
+    });
+    console.log("Task deleted event tracked successfully");
   };
 
   const handleUpdate = (taskId, newTitle) => {
@@ -83,7 +120,6 @@ const Todo = () => {
     setTasks(updatedTasks);
   };
 
-  // Logout function
   const handleLogout = () => {
     Swal({
       icon: "success",
@@ -91,24 +127,17 @@ const Todo = () => {
       button: "OK",
     });
     navigate("/login");
+    Loggedout(usermail);
   };
 
-  const EventTaskgenerated = (usermail) => {
-    mixpanel.track("Task Generated", {
-      "User ID": usermail,
-      "Task ID": taskInput._id,
-      "Generated Task": taskInput.title,
+  const Loggedout = (usermail) => {
+    mixpanel.track("User Logged Out", {
+      user_id: usermail,
+      logout_method: "Email",
+      success: true,
+      timestamp: new Date().toISOString(),
     });
-    console.log("Task generated event tracked successfully");
-  };
-
-  const EventTaskdeleted = (usermail) => {
-    mixpanel.track("Task Deleted", {
-      "User ID": usermail,
-      "Task ID": taskInput._id,
-      "Deleted Task": taskInput.title,
-    });
-    console.log("Task deleted event tracked successfully");
+    console.log("Logout event tracked successfully");
   };
 
   return (

@@ -7,6 +7,4 @@ mixpanel.init(mixPanelToken, {
   ignore_dnt: true,
 });
 
-// mixpanel.identify("USER_ID");
-
 export default mixpanel;

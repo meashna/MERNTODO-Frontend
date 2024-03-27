@@ -8,6 +8,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import url from "../url.js";
 import Swal from "sweetalert";
+import mixpanel from "../mixpanel.js";
 const SignUp = () => {
   const [Inputs, setInputs] = useState({
     username: "",
@@ -38,13 +39,16 @@ const SignUp = () => {
           console.log(response.data._id);
           sessionStorage.setItem("id", response.data._id);
           localStorage.setItem("username", Inputs.username);
+          console.log(Inputs.username);
           localStorage.setItem("usermail", Inputs.email);
+          console.log(Inputs.email);
           Swal({
             icon: "success",
             title: "Registered Sucessfully.",
             button: "OK",
           });
           navigate("/todo");
+          Registered(Inputs.email);
         }
         setInputs({
           username: "",
@@ -67,6 +71,17 @@ const SignUp = () => {
         }
       });
   };
+
+  const Registered = (email) => {
+    mixpanel.track("User Registered", {
+      user_id: email,
+      registration_method: "Email",
+      success: true,
+      timestamp: new Date().toISOString(),
+    });
+    console.log("Register event tracked successfully");
+  };
+
   return (
     <div>
       <div className="form-container">

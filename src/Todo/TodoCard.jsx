@@ -12,9 +12,11 @@ const TodoCard = ({ title, id, delid, update }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
+  const [oldTitle, setOldTitle] = useState(title); // To capture the old title reliably
 
   const handleEdit = () => {
     setIsEditing(true);
+    setOldTitle(title);
   };
 
   const handleUpdate = async () => {
@@ -27,8 +29,9 @@ const TodoCard = ({ title, id, delid, update }) => {
         title: editTitle,
       });
       update(id, editTitle);
-      EventTaskedit(usermail);
+      Taskedited(usermail, oldTitle, editTitle);
       setIsEditing(false);
+      setOldTitle(editTitle);
       toast.success("Task Updated");
     } catch (error) {
       console.error("Failed to update task:", error);
@@ -36,13 +39,14 @@ const TodoCard = ({ title, id, delid, update }) => {
     }
   };
 
-  const EventTaskedit = (usermail) => {
+  const Taskedited = (usermail, oldTitle, newTitle) => {
     mixpanel.track("Task Edited", {
       "User ID": usermail,
       "Task ID": id,
-      "Old Title": title,
-      "New Title": editTitle,
+      "Old Title": oldTitle,
+      "New Title": newTitle,
     });
+
     console.log("Task edit event tracked successfully");
   };
 

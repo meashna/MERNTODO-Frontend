@@ -38,11 +38,14 @@ const Login = () => {
       .then((response) => {
         navigate("/todo");
         sessionStorage.setItem("id", response.data._id);
+
         const username = response.data.username;
         localStorage.setItem("username", username);
         const usermail = response.data.email;
         localStorage.setItem("usermail", usermail);
-        console.log(Inputs);
+        console.log(username);
+        console.log(usermail);
+
         Swal({
           icon: "success",
           title: "Logged In Successfully.",
@@ -50,14 +53,16 @@ const Login = () => {
         });
         navigate("/todo");
 
-        LoginEvent();
+        Loggined(usermail);
 
-        UniqueuserLogin(Inputs.email);
-
-        mixpanel.identify(email);
+        mixpanel.identify(usermail);
 
         mixpanel.people.set({
-          $email: email,
+          $name: username,
+          $email: usermail,
+          $created: new Date().toISOString(),
+          $user_id: usermail,
+          test: "Test",
         });
       })
       .catch((error) => {
@@ -71,29 +76,17 @@ const Login = () => {
             button: "Try Again",
           });
         }
-        // else {
-        //   Swal({
-        //     icon: "error",
-        //     title: "User not found. Please check your email address.",
-        //     button: "Try Again",
-        //   });
-        // }
       });
   };
 
-  const LoginEvent = () => {
-    mixpanel.track("Login Success", {
-      "Login Type": "Email",
-    });
-    console.log("Login event tracked successfully");
-  };
-
-  const UniqueuserLogin = (email) => {
-    mixpanel.track("Unique User Login", {
+  const Loggined = (email) => {
+    mixpanel.track("User Logged In", {
       user_id: email,
       login_method: "Email",
       success: true,
+      timestamp: new Date().toISOString(), // ISO 8601 format
     });
+    console.log("Login event tracked successfully");
   };
 
   return (
