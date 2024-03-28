@@ -90,6 +90,7 @@ const SignUp = () => {
       success: true,
       timestamp: new Date().toISOString(),
     });
+    mixpanel.people.increment("Registrations", 1);
     console.log("Register event tracked successfully");
   };
 

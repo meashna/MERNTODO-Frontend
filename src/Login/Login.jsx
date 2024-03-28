@@ -86,6 +86,7 @@ const Login = () => {
       success: true,
       timestamp: new Date().toISOString(), // ISO 8601 format
     });
+    mixpanel.people.increment("Logins", 1);
     console.log("Login event tracked successfully");
   };
 

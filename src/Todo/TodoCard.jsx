@@ -46,7 +46,8 @@ const TodoCard = ({ title, id, delid, update }) => {
       "Old Title": oldTitle,
       "New Title": newTitle,
     });
-
+    mixpanel.people.increment("Tasks Edited", 1);
+    console.log(usermail, oldTitle, newTitle);
     console.log("Task edit event tracked successfully");
   };
 

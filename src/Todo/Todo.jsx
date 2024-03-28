@@ -68,6 +68,7 @@ const Todo = () => {
       "Generated Task": task,
     });
     mixpanel.people.increment("Tasks Added", 1);
+    console.log(usermail, task);
     console.log("Task created event tracked successfully");
   };
 
@@ -110,6 +111,8 @@ const Todo = () => {
       "User ID": usermail,
       "Deleted Task": taskTitle,
     });
+    mixpanel.people.increment("Tasks Deleted", 1);
+    console.log(usermail, taskTitle);
     console.log("Task deleted event tracked successfully");
   };
 
@@ -137,6 +140,7 @@ const Todo = () => {
       success: true,
       timestamp: new Date().toISOString(),
     });
+    mixpanel.people.increment("Logouts", 1);
     console.log("Logout event tracked successfully");
   };
 
