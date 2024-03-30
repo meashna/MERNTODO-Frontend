@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Register.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,7 +9,31 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 import url from "../url.js";
 import Swal from "sweetalert";
 import mixpanel from "../mixpanel.js";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 const SignUp = () => {
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setInterval(() => {
+        setProgress((prevProgress) => {
+          if (prevProgress >= 100) {
+            clearInterval(timer);
+            return 100;
+          }
+          const diff = Math.random() * 10;
+          return Math.min(prevProgress + diff, 100);
+        });
+      }, 500);
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  }, [loading]);
+
   const [Inputs, setInputs] = useState({
     username: "",
     email: "",
@@ -31,6 +55,8 @@ const SignUp = () => {
       });
       return; // Stop the function from proceeding further
     }
+    setLoading(true);
+    setProgress(0);
     await axios
       .post(`${url}api/v1/register`, Inputs)
       .then((response) => {
@@ -42,12 +68,16 @@ const SignUp = () => {
           console.log(Inputs.username);
           localStorage.setItem("usermail", Inputs.email);
           console.log(Inputs.email);
+          setProgress(100);
+          setTimeout(() => {
+            navigate("/todo");
+          }, 500);
           Swal({
             icon: "success",
             title: "Registered Sucessfully.",
             button: "OK",
           });
-          navigate("/todo");
+          // navigate("/todo");
 
           mixpanel.identify(Inputs.email);
 
@@ -68,6 +98,7 @@ const SignUp = () => {
         });
       })
       .catch((error) => {
+        setLoading(false);
         if (
           error.response &&
           error.response.data.message === "User already exists"
@@ -97,9 +128,32 @@ const SignUp = () => {
   return (
     <div>
       <div className="form-container">
+        {loading ? (
+          <div className="loader-container">
+            <CircularProgressbar
+              value={progress}
+              text={`${progress.toFixed(0)}%`}
+              styles={{
+                text: {
+                  fill: "#ffff",
+                },
+                trail: {
+                  stroke: "#ffff",
+                },
+                path: {
+                  stroke: "458393",
+                  strokeLinecap: "round",
+                },
+              }}
+            />
+          </div>
+        ) : (
+          <div className="loader-container" style={{ display: "none" }}>
+            <CircularProgressbar value={progress} text={`${progress}%`} />
+          </div>
+        )}
         <form className="form" onSubmit={handleSubmit}>
           <h2 className="login-heading">Register</h2>
-
           <div className="form-control">
             {/* <label>Name:</label> */}
             <input

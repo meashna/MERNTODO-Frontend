@@ -4,6 +4,14 @@
     align-items: center;
     height: 100vh;
     background: linear-gradient(180deg, #458393 0%, #3A547C 100%);
+    overflow: hidden;
+}
+
+
+.loader-container {
+    height: 3rem;
+    width: 3rem;
+    margin: 1rem;
 }
 
 .login-heading {
@@ -21,6 +29,7 @@
     padding: 2rem;
     border-radius: 5px;
     background-color: #FBFBFB;
+    height: 450px;
 }
 
 .form-control {
@@ -82,7 +91,6 @@
     text-align: center;
     color: #000;
     font-family: Lato;
-
 
 }
 

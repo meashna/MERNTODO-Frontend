@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,9 +7,32 @@ import url from "../url.js";
 import mixpanel from "../mixpanel.js";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setInterval(() => {
+        setProgress((prevProgress) => {
+          if (prevProgress >= 100) {
+            clearInterval(timer);
+            return 100;
+          }
+          const diff = Math.random() * 10;
+          return Math.min(prevProgress + diff, 100);
+        });
+      }, 500);
+    }
+    return () => {
+      clearInterval(timer);
+    };
+  }, [loading]);
 
   const [Inputs, setInputs] = useState({
     email: "",
@@ -33,50 +56,55 @@ const Login = () => {
       return;
     }
 
-    await axios
-      .post(`${url}api/v1/signin`, Inputs)
-      .then((response) => {
+    setLoading(true);
+    setProgress(0);
+
+    try {
+      const response = await axios.post(`${url}api/v1/signin`, Inputs);
+
+      setProgress(100);
+      setTimeout(() => {
         navigate("/todo");
-        sessionStorage.setItem("id", response.data._id);
+      }, 500);
 
-        const username = response.data.username;
-        localStorage.setItem("username", username);
-        const usermail = response.data.email;
-        localStorage.setItem("usermail", usermail);
-        console.log(username);
-        console.log(usermail);
+      sessionStorage.setItem("id", response.data._id);
 
-        Swal({
-          icon: "success",
-          title: "Logged In Successfully.",
-          button: "OK",
-        });
-        navigate("/todo");
+      const username = response.data.username;
+      const usermail = response.data.email;
 
-        Loggined(usermail);
+      localStorage.setItem("username", username);
+      localStorage.setItem("usermail", usermail);
 
-        mixpanel.identify(usermail);
+      console.log(username);
+      console.log(usermail);
 
-        mixpanel.people.set({
-          $name: username,
-          $email: usermail,
-          $created: new Date().toISOString(),
-          $user_id: usermail,
-          test: "Test",
-        });
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data.message === "User not found."
-        ) {
-          Swal({
-            icon: "error",
-            title: "User not found. Please check your email address.",
-            button: "Try Again",
-          });
-        }
+      Swal({
+        icon: "success",
+        title: "Logged In Successfully.",
+        button: "OK",
       });
+
+      Loggined(usermail);
+
+      mixpanel.identify(usermail);
+
+      mixpanel.people.set({
+        $name: username,
+        $email: usermail,
+        $created: new Date().toISOString(),
+        $user_id: usermail,
+        test: "Test",
+      });
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.data.message === "User not found.") {
+        Swal({
+          icon: "error",
+          title: "User not found. Please check your email address.",
+          button: "Try Again",
+        });
+      }
+    }
   };
 
   const Loggined = (email) => {
@@ -92,6 +120,30 @@ const Login = () => {
 
   return (
     <div className="form-container">
+      {loading ? (
+        <div className="loader-container">
+          <CircularProgressbar
+            value={progress}
+            text={`${progress.toFixed(0)}%`}
+            styles={{
+              text: {
+                fill: "#ffff",
+              },
+              trail: {
+                stroke: "#ffff",
+              },
+              path: {
+                stroke: "458393",
+                strokeLinecap: "round",
+              },
+            }}
+          />
+        </div>
+      ) : (
+        <div className="loader-container" style={{ display: "none" }}>
+          <CircularProgressbar value={progress} text={`${progress}%`} />
+        </div>
+      )}
       <form className="form" onSubmit={handleSubmit}>
         <h2 className="login-heading">Login</h2>
         <div className="form-control">
