@@ -9,6 +9,7 @@
     height: 3rem;
     background-color: white;
     box-shadow: 0px 3.291px 8.228px 0px rgba(0, 0, 0, 0.12);
+
 }
 
 .task-icons {
@@ -37,4 +38,13 @@
     font-size: 1rem;
     padding: 0.5rem;
     border-radius: 5px;
+}
+
+
+.error-placeholder::placeholder {
+    font-family: Lato;
+    color: red;
+    font-size: 1rem;
+
+
 }

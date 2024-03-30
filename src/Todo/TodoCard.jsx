@@ -12,7 +12,8 @@ const TodoCard = ({ title, id, delid, update }) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
-  const [oldTitle, setOldTitle] = useState(title); // To capture the old title reliably
+  const [oldTitle, setOldTitle] = useState(title);
+  const [inputerror, setInputerror] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -21,8 +22,11 @@ const TodoCard = ({ title, id, delid, update }) => {
 
   const handleUpdate = async () => {
     if (editTitle.trim() === "") {
-      toast.error("Task cannot be empty");
+      //toast.error("Task cannot be empty");
+      setInputerror("Task cannot be empty");
       return;
+    } else {
+      setInputerror("");
     }
     try {
       await axios.put(`${url}api/v2/updateTask/${id}`, {
@@ -55,7 +59,9 @@ const TodoCard = ({ title, id, delid, update }) => {
     <div className="task-cont">
       {isEditing ? (
         <input
-          className="todo-input"
+          //className="todo-input"
+          className={inputerror ? "error-placeholder" : "todo-input"}
+          placeholder={inputerror ? "Task cannot be empty!!" : ""}
           type="text"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}

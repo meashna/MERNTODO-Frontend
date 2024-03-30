@@ -17,6 +17,7 @@ const Todo = () => {
   const username = localStorage.getItem("username");
   const usermail = localStorage.getItem("usermail");
   const navigate = useNavigate();
+  const [inputerror, setInputerror] = useState("");
 
   useEffect(() => {
     if (!userId) {
@@ -42,10 +43,15 @@ const Todo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (taskInput.title.trim() === "") {
-      toast.error("Task cannot be empty");
+      //toast.error("Task cannot be empty");
+      setInputerror("Task cannot be empty");
       return;
+    } else {
+      setInputerror("");
     }
+
     try {
       const response = await axios.post(`${url}api/v2/addTask`, {
         title: taskInput.title,
@@ -160,13 +166,15 @@ const Todo = () => {
         <div className="todo-form">
           <form onSubmit={handleSubmit} style={{ display: "flex" }}>
             <input
-              className="addtodoinput"
+              //className="addtodoinput"
+              className={inputerror ? "error-placeholder" : "addtodoinput"}
               type="text"
-              placeholder="Enter task"
+              placeholder={inputerror ? "Task cannot be empty!!" : "Enter task"}
               name="title"
               onChange={handleChange}
               value={taskInput.title}
             />
+
             <button className="add" type="submit">
               <IoAdd className="add-icon" />
             </button>
