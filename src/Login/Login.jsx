@@ -27,7 +27,7 @@ const Login = () => {
           const diff = Math.random() * 10;
           return Math.min(prevProgress + diff, 100);
         });
-      }, 500);
+      }, 2000);
     }
     return () => {
       clearInterval(timer);
@@ -65,7 +65,7 @@ const Login = () => {
       setProgress(100);
       setTimeout(() => {
         navigate("/todo");
-      }, 500);
+      }, 2000);
 
       sessionStorage.setItem("id", response.data._id);
 
