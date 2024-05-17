@@ -16,6 +16,13 @@ const Login = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    const usermail = localStorage.getItem("usermail");
+    if (usermail) {
+      navigate("/todo"); // Adjust this route according to your needs
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     let timer;
     if (loading) {
       timer = setInterval(() => {

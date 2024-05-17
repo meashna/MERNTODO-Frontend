@@ -1,15 +1,3 @@
-import React, { useState, useEffect } from "react";
-import "./Todo.css";
-import { useNavigate } from "react-router-dom";
-import TodoCard from "./TodoCard";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { IoAdd } from "react-icons/io5";
-import url from "../url.js";
-import Swal from "sweetalert";
-import mixpanel from "../mixpanel.js";
-
 const Todo = () => {
   const userId = sessionStorage.getItem("id");
   const [tasks, setTasks] = useState([]);
@@ -18,7 +6,7 @@ const Todo = () => {
   const usermail = localStorage.getItem("usermail");
   const navigate = useNavigate();
   const [inputerror, setInputerror] = useState("");
-  // const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     if (!userId) {
@@ -56,15 +44,15 @@ const Todo = () => {
     try {
       const response = await axios.post(`${url}api/v2/addTask`, {
         title: taskInput.title,
-        //completed: false,
+        completed: isCompleted,
         id: userId,
       });
 
       setTasks([...tasks, response.data.list]);
-      //setTasks([...tasks, response.data.task]);
       setTaskInput({ title: "" });
       toast.success("Task Added");
       Taskcreated(usermail, taskInput.title);
+      console.log("This is", taskInput.title, isCompleted);
     } catch (error) {
       console.error("Failed to add task:", error);
       toast.error("Failed to add task");
@@ -118,18 +106,7 @@ const Todo = () => {
     setTasks(updatedTasks);
   };
 
-  const handlecheckboxUpdate = (taskId, newCompleted) => {
-    const updatedTasks = tasks.map((task) =>
-      taskId === task._id ? { ...task, completed: newCompleted } : task
-    );
-    setTasks(updatedTasks);
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem("username");
-    localStorage.removeItem("usermail");
-    sessionStorage.clear();
-    navigate("/login");
     Swal({
       icon: "success",
       title: "Logout Successfull",
@@ -189,8 +166,6 @@ const Todo = () => {
               id={item._id}
               delid={handleDelete}
               update={handleUpdate}
-              completed={item.completed}
-              handleCheckboxupdate={handlecheckboxUpdate}
             />
           ))}
         </div>
